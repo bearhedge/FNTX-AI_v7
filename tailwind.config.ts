@@ -52,6 +52,17 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
+                terminal: {
+                    dark: '#0A0E17',
+                    light: '#1A1F2C',
+                    accent: '#33C3F0',
+                    green: '#4CD964',
+                    red: '#FF3B30',
+                    yellow: '#FFCC00',
+                    blue: '#1EAEDB',
+                    text: '#F6F6F7',
+                    muted: '#8E9196',
+                },
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',

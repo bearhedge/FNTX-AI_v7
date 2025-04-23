@@ -134,7 +134,7 @@ export function GameInterface() {
             messages={state.history} 
             typing={state.isTyping}
             displayedText={displayedText}
-            className="h-[500px]" {/* Increased height from 400px to 500px */}
+            className="h-[500px]" /* Increased height from 400px to 500px */
           />
           
           {state.gamePhase === 'setup' ? (
@@ -172,4 +172,3 @@ export function GameInterface() {
     </div>
   );
 }
-

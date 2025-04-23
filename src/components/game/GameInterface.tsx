@@ -122,19 +122,19 @@ export function GameInterface() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-4">
+    <div className="max-w-5xl mx-auto p-4"> {/* Increased max-w from 4xl to 5xl */}
       <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">
         FNTX AI
         <span className="text-blue-500">_</span>
       </h1>
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-2"> {/* Keep existing column span */}
           <Terminal 
             messages={state.history} 
             typing={state.isTyping}
             displayedText={displayedText}
-            className="h-[400px]"
+            className="h-[500px]" {/* Increased height from 400px to 500px */}
           />
           
           {state.gamePhase === 'setup' ? (
@@ -172,3 +172,4 @@ export function GameInterface() {
     </div>
   );
 }
+

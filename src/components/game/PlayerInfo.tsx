@@ -21,7 +21,7 @@ export function PlayerInfo({ player, className }: PlayerInfoProps) {
   };
   
   return (
-    <div className={cn("font-mono text-sm space-y-4", className)}>
+    <div className={cn("font-sans text-base space-y-4", className)}>
       {/* Account Info Table */}
       <div className="bg-terminal-dark rounded-md overflow-hidden">
         <div className="bg-terminal-light p-2 text-terminal-text font-bold border-b border-terminal-accent">
@@ -31,20 +31,20 @@ export function PlayerInfo({ player, className }: PlayerInfoProps) {
           <Table>
             <TableBody>
               <TableRow>
-                <TableCell className="text-xs text-terminal-muted">Account Type</TableCell>
-                <TableCell className="text-terminal-text text-right">Paper - Margin</TableCell>
+                <TableCell className="text-sm text-terminal-muted font-sans">Account Type</TableCell>
+                <TableCell className="text-terminal-text text-right font-sans text-base">Paper - Margin</TableCell>
               </TableRow>
               <TableRow>
-                <TableCell className="text-xs text-terminal-muted">Account Number</TableCell>
-                <TableCell className="text-terminal-text text-right">PAPER-{player.name.toUpperCase().slice(0, 4)}-001</TableCell>
+                <TableCell className="text-sm text-terminal-muted font-sans">Account Number</TableCell>
+                <TableCell className="text-terminal-text text-right font-sans text-base">PAPER-{player.name.toUpperCase().slice(0, 4)}-001</TableCell>
               </TableRow>
               <TableRow>
-                <TableCell className="text-xs text-terminal-muted">Balance</TableCell>
-                <TableCell className="text-terminal-green font-bold text-right">${formatNumber(player.cash)}</TableCell>
+                <TableCell className="text-sm text-terminal-muted font-sans">Balance</TableCell>
+                <TableCell className="text-terminal-green font-bold text-right font-sans text-base">${formatNumber(player.cash)}</TableCell>
               </TableRow>
               <TableRow>
-                <TableCell className="text-xs text-terminal-muted">Buying Power</TableCell>
-                <TableCell className="text-terminal-blue font-bold text-right">${formatNumber(buyingPower)}</TableCell>
+                <TableCell className="text-sm text-terminal-muted font-sans">Buying Power</TableCell>
+                <TableCell className="text-terminal-blue font-bold text-right font-sans text-base">${formatNumber(buyingPower)}</TableCell>
               </TableRow>
             </TableBody>
           </Table>
@@ -60,24 +60,24 @@ export function PlayerInfo({ player, className }: PlayerInfoProps) {
           <Table>
             <TableBody>
               <TableRow>
-                <TableCell className="text-xs text-terminal-muted">Smart Contract ID</TableCell>
-                <TableCell className="text-terminal-text text-right">SC-001</TableCell>
+                <TableCell className="text-sm text-terminal-muted font-sans">Smart Contract ID</TableCell>
+                <TableCell className="text-terminal-text text-right font-sans text-base">SC-001</TableCell>
               </TableRow>
               <TableRow>
-                <TableCell className="text-xs text-terminal-muted">PIC</TableCell>
-                <TableCell className="text-terminal-text text-right">1.45x</TableCell>
+                <TableCell className="text-sm text-terminal-muted font-sans">PIC</TableCell>
+                <TableCell className="text-terminal-text text-right font-sans text-base">1.45x</TableCell>
               </TableRow>
               <TableRow>
-                <TableCell className="text-xs text-terminal-muted">DPI</TableCell>
-                <TableCell className="text-terminal-text text-right">0.85x</TableCell>
+                <TableCell className="text-sm text-terminal-muted font-sans">DPI</TableCell>
+                <TableCell className="text-terminal-text text-right font-sans text-base">0.85x</TableCell>
               </TableRow>
               <TableRow>
-                <TableCell className="text-xs text-terminal-muted">RVPI</TableCell>
-                <TableCell className="text-terminal-text text-right">0.60x</TableCell>
+                <TableCell className="text-sm text-terminal-muted font-sans">RVPI</TableCell>
+                <TableCell className="text-terminal-text text-right font-sans text-base">0.60x</TableCell>
               </TableRow>
               <TableRow>
-                <TableCell className="text-xs text-terminal-muted">TVPI</TableCell>
-                <TableCell className="text-terminal-text text-right">1.45x</TableCell>
+                <TableCell className="text-sm text-terminal-muted font-sans">TVPI</TableCell>
+                <TableCell className="text-terminal-text text-right font-sans text-base">1.45x</TableCell>
               </TableRow>
             </TableBody>
           </Table>
@@ -86,3 +86,4 @@ export function PlayerInfo({ player, className }: PlayerInfoProps) {
     </div>
   );
 }
+

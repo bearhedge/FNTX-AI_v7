@@ -19,18 +19,18 @@ export function Terminal({ messages, typing = false, className, displayedText = 
   return (
     <div 
       className={cn(
-        "bg-terminal-dark border border-terminal-light rounded-md p-4 font-mono text-terminal-text overflow-auto", 
+        "bg-white border border-gray-200 rounded-lg p-4 font-sans text-gray-800 overflow-auto shadow-lg", 
         className
       )}
     >
       <div className="flex items-center mb-4">
         <div className="flex space-x-2 mr-4">
-          <div className="w-3 h-3 bg-terminal-red rounded-full"></div>
-          <div className="w-3 h-3 bg-terminal-yellow rounded-full"></div>
-          <div className="w-3 h-3 bg-terminal-green rounded-full"></div>
+          <div className="w-3 h-3 bg-red-400 rounded-full"></div>
+          <div className="w-3 h-3 bg-yellow-400 rounded-full"></div>
+          <div className="w-3 h-3 bg-green-400 rounded-full"></div>
         </div>
-        <div className="text-xs text-terminal-muted font-semibold flex-1 text-center">
-          options_whisperer@localhost:~
+        <div className="text-xs text-gray-500 font-medium flex-1 text-center">
+          fntx_ai@localhost:~
         </div>
       </div>
       
@@ -41,16 +41,16 @@ export function Terminal({ messages, typing = false, className, displayedText = 
             className="leading-relaxed animate-fade-in" 
             style={{animationDelay: `${index * 50}ms`}}
           >
-            <span className="text-terminal-blue">$ </span>
+            <span className="text-blue-500">$ </span>
             <span>{message}</span>
           </div>
         ))}
         
         {typing && (
           <div className="leading-relaxed animate-fade-in">
-            <span className="text-terminal-blue">$ </span>
+            <span className="text-blue-500">$ </span>
             <span>{displayedText}</span>
-            <span className="inline-block w-2 h-4 bg-terminal-accent animate-pulse ml-0.5"></span>
+            <span className="inline-block w-2 h-4 bg-blue-500 animate-pulse ml-0.5"></span>
           </div>
         )}
         <div ref={messagesEndRef} />

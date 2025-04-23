@@ -1,3 +1,4 @@
+
 import { GameProvider } from "@/context/GameContext";
 import { GameInterface } from "@/components/game/GameInterface";
 

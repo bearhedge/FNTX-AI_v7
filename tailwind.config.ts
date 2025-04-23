@@ -24,6 +24,17 @@ export default {
 				ring: 'hsl(var(--ring))',
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
+				terminal: {
+					dark: '#0A0E17',     // Deep midnight blue/black
+					light: '#1A1F2C',    // Lighter dark grey
+					accent: '#8E9196',   // Silver-grey accent
+					green: '#7CB5A8',    // Muted sage green
+					red: '#B76D68',      // Soft muted red
+					yellow: '#D4B37D',   // Soft muted gold
+					blue: '#607D8B',     // Steel blue
+					text: '#E0E0E3',     // Light silver text
+					muted: '#4A4E57',    // Dark muted grey
+				},
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',
 					foreground: 'hsl(var(--primary-foreground))'

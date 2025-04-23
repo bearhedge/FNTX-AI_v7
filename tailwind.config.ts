@@ -23,8 +23,11 @@ export default {
             text: '#3C3D3F',       // Dark text for contrast
           }
         },
+        fntx: {
+          blue: '#007AFF',        // FNTX brand blue
+          dark: '#000000',        // FNTX brand black
+        },
         terminal: {
-          ...require('tailwindcss/defaultTheme').colors.terminal,
           background: '#E5E6E8'    // Match apple grey background
         }
       },
@@ -35,4 +38,3 @@ export default {
   },
   plugins: [require("tailwindcss-animate")],
 } satisfies Config;
-

@@ -124,8 +124,14 @@ export function GameInterface() {
   return (
     <div className="max-w-5xl mx-auto p-4 bg-apple-silver-light/20">
       <h1 className="text-3xl font-bold text-center text-apple-gray-text mb-6">
-        FNTX AI
-        <span className="text-apple-silver-dark">_</span>
+        <div className="flex items-center justify-center gap-2">
+          <img 
+            src="/lovable-uploads/63b709cd-98d7-4791-a738-afc9f5da504e.png" 
+            alt="FNTX Logo" 
+            className="h-8 w-auto"
+          />
+          <span>AI<span className="text-apple-silver-dark">_</span></span>
+        </div>
       </h1>
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -172,4 +178,3 @@ export function GameInterface() {
     </div>
   );
 }
-

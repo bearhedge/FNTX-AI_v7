@@ -14,6 +14,7 @@ export function GameInterface() {
   const { state, dispatch } = useGameContext();
   const [activeTooltip, setActiveTooltip] = useState<string | null>(null);
   const [setupComplete, setSetupComplete] = useState(false);
+  const [timeBarrierSelected, setTimeBarrierSelected] = useState(false);
 
   // Set initial scenario
   useEffect(() => {
@@ -45,7 +46,7 @@ export function GameInterface() {
     }
   }, [isComplete, typingMessage, dispatch]);
   
-  // Handle game flow advancement
+  // Handle game flow advancement - only run once during setup
   useEffect(() => {
     if (isComplete && !state.isTyping && state.gamePhase === 'playing' && !setupComplete) {
       const { nextScenario, message } = advanceGameFlow(state);
@@ -89,6 +90,11 @@ export function GameInterface() {
     
     const { newState, message } = performGameAction(choice.action, state);
     
+    // Check if this is a time barrier selection
+    if (choice.action.startsWith('SET_TIME_BARRIER_') && !timeBarrierSelected) {
+      setTimeBarrierSelected(true);
+    }
+    
     // Update state based on action result
     if (newState.player) {
       dispatch({ type: 'UPDATE_PLAYER', payload: newState.player });
@@ -119,6 +125,18 @@ export function GameInterface() {
         setTimeout(() => {
           dispatch({ type: 'ADD_TRADE', payload: state.player.currentTrade });
         }, 1000);
+      }
+      
+      // Advance to next scenario after time barrier selection
+      if (choice.action.startsWith('SET_TIME_BARRIER_')) {
+        setTimeout(() => {
+          const nextScenario = scenarios.find(s => s.id === 'skip_trading');
+          if (nextScenario) {
+            dispatch({ type: 'SET_SCENARIO', payload: nextScenario });
+            dispatch({ type: 'SET_CHOICES', payload: nextScenario.choices });
+            addMessageWithTypingEffect("Now that you've set your time barrier, decide if you want to proceed with trading today based on the market conditions.");
+          }
+        }, 1500);
       }
     }, 1500);
   };

@@ -181,6 +181,10 @@ export const performGameAction = (action: string, state: GameState): { newState:
           player: {
             ...state.player,
             tradingTimeBarrier: 3
+          },
+          market: {
+            ...state.market,
+            currentHour: 3 // Set current hour to match time barrier
           }
         },
         message: "You've set a 3-hour time barrier. You'll start trading at 12pm after observing the morning market trends."
@@ -192,6 +196,10 @@ export const performGameAction = (action: string, state: GameState): { newState:
           player: {
             ...state.player,
             tradingTimeBarrier: 4
+          },
+          market: {
+            ...state.market,
+            currentHour: 4 // Set current hour to match time barrier
           }
         },
         message: "You've set a 4-hour time barrier. You'll start trading at 1pm after observing more of the day's market action."
@@ -203,12 +211,17 @@ export const performGameAction = (action: string, state: GameState): { newState:
           player: {
             ...state.player,
             tradingTimeBarrier: 5
+          },
+          market: {
+            ...state.market,
+            currentHour: 5 // Set current hour to match time barrier
           }
         },
         message: "You've set a 5-hour time barrier. You'll start trading at 2pm after most of the day's trend is established."
       };
       
     case 'PROCEED_TRADING':
+      const positionSizingScenario = scenarios.find(s => s.id === 'position_sizing');
       return {
         newState: { 
           player: {
@@ -218,7 +231,9 @@ export const performGameAction = (action: string, state: GameState): { newState:
           market: {
             ...state.market,
             currentHour: (state.player.tradingTimeBarrier || 3) // Set current hour to match time barrier
-          }
+          },
+          currentScenario: positionSizingScenario,
+          currentChoices: positionSizingScenario?.choices || []
         },
         message: "You've decided to proceed with trading today. Now let's determine position sizing."
       };
@@ -228,47 +243,59 @@ export const performGameAction = (action: string, state: GameState): { newState:
         newState: { 
           player: {
             ...state.player,
-            canTradeToday: false
+            canTradeToday: false,
+            tradingTimeBarrier: null // Reset for next day
           },
           // Advance to next day
           market: {
             ...state.market,
             currentDay: state.market.currentDay + 1,
             currentHour: 0
-          }
+          },
+          currentScenario: scenarios.find(s => s.id === 'time_barrier'),
+          currentChoices: scenarios.find(s => s.id === 'time_barrier')?.choices || []
         },
         message: "You've decided to sit out today's trading session. A disciplined trader knows when to stay on the sidelines. We'll resume tomorrow morning."
       };
       
     case 'SIZE_POSITION_10':
+      const optionSelectionScenario = scenarios.find(s => s.id === 'option_selection');
       return {
         newState: { 
           player: {
             ...state.player,
             positionSize: 10
-          }
+          },
+          currentScenario: optionSelectionScenario,
+          currentChoices: optionSelectionScenario?.choices || []
         },
         message: "You've chosen a conservative position size of 10% of your buying power. This limits potential losses but also caps potential gains."
       };
       
     case 'SIZE_POSITION_25':
+      const optionSelectionScenario25 = scenarios.find(s => s.id === 'option_selection');
       return {
         newState: { 
           player: {
             ...state.player,
             positionSize: 25
-          }
+          },
+          currentScenario: optionSelectionScenario25,
+          currentChoices: optionSelectionScenario25?.choices || []
         },
         message: "You've chosen a moderate position size of 25% of your buying power. This balances risk and potential reward."
       };
       
     case 'SIZE_POSITION_50':
+      const optionSelectionScenario50 = scenarios.find(s => s.id === 'option_selection');
       return {
         newState: { 
           player: {
             ...state.player,
             positionSize: 50
-          }
+          },
+          currentScenario: optionSelectionScenario50,
+          currentChoices: optionSelectionScenario50?.choices || []
         },
         message: "You've chosen an aggressive position size of 50% of your buying power. This maximizes potential gains but also increases risk."
       };
@@ -405,21 +432,6 @@ export const advanceGameFlow = (state: GameState): { nextScenario: string | null
     };
   }
   
-  // If time barrier is set but trading decision not made, move to trading decision
-  if (state.player.tradingTimeBarrier && state.player.canTradeToday === true && state.player.positionSize === null) {
-    return {
-      nextScenario: 'position_sizing',
-      message: "Now that you've decided to trade today, let's determine your position size."
-    };
-  }
-  
-  // If position size is set, move to option selection
-  if (state.player.positionSize && !state.player.currentTrade) {
-    return {
-      nextScenario: 'option_selection',
-      message: "With your position size set, it's time to select which options to sell."
-    };
-  }
-  
+  // Return empty result if no advancement needed
   return { nextScenario: null, message: "" };
 };

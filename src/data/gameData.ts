@@ -1,4 +1,3 @@
-
 import { Scenario, GameState, Choice } from "@/types/game.types";
 
 export const scenarios: Scenario[] = [
@@ -166,8 +165,13 @@ export const performGameAction = (action: string, state: GameState): { newState:
       };
       
     case 'SKIP_TUTORIAL':
+      const tutorialScenario = scenarios.find(s => s.id === 'time_barrier');
       return {
-        newState: { gamePhase: 'playing' },
+        newState: { 
+          gamePhase: 'playing',
+          currentScenario: tutorialScenario,
+          currentChoices: tutorialScenario?.choices || []
+        },
         message: "Great! Let's jump straight to setting your trading parameters for SPY options."
       };
       
@@ -394,7 +398,7 @@ export const performGameAction = (action: string, state: GameState): { newState:
 // Function to update game flow based on time barrier
 export const advanceGameFlow = (state: GameState): { nextScenario: string | null, message: string } => {
   // If player just completed setup, move to time barrier selection
-  if (state.gamePhase === 'setup' && state.player.name) {
+  if (state.gamePhase === 'playing' && state.player.name && !state.player.tradingTimeBarrier) {
     return {
       nextScenario: 'time_barrier',
       message: `Welcome, ${state.player.name}! Let's set up your trading parameters for SPY options.`

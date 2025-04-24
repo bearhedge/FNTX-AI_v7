@@ -13,6 +13,7 @@ import { useTypingEffect } from '@/hooks/useTypingEffect';
 export function GameInterface() {
   const { state, dispatch } = useGameContext();
   const [activeTooltip, setActiveTooltip] = useState<string | null>(null);
+  const [setupComplete, setSetupComplete] = useState(false);
 
   // Set initial scenario
   useEffect(() => {
@@ -46,7 +47,7 @@ export function GameInterface() {
   
   // Handle game flow advancement
   useEffect(() => {
-    if (isComplete && !state.isTyping && state.gamePhase === 'playing') {
+    if (isComplete && !state.isTyping && state.gamePhase === 'playing' && !setupComplete) {
       const { nextScenario, message } = advanceGameFlow(state);
       
       if (message && nextScenario) {
@@ -58,12 +59,15 @@ export function GameInterface() {
             if (scenario) {
               dispatch({ type: 'SET_SCENARIO', payload: scenario });
               dispatch({ type: 'SET_CHOICES', payload: scenario.choices });
+              if (nextScenario === 'time_barrier') {
+                setSetupComplete(true);
+              }
             }
           }, 1500);
         }, 500);
       }
     }
-  }, [isComplete, state, dispatch]);
+  }, [isComplete, state, dispatch, setupComplete]);
 
   // Handle player name submission
   const handleNameSubmit = (name: string) => {
@@ -78,6 +82,9 @@ export function GameInterface() {
 
   // Handle choice selection
   const handleChoiceSelect = (choice: Choice) => {
+    // Prevent processing the same action multiple times
+    if (state.isTyping) return;
+    
     addMessageWithTypingEffect(`You selected: ${choice.text}`);
     
     const { newState, message } = performGameAction(choice.action, state);

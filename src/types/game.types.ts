@@ -1,4 +1,3 @@
-
 export interface PlayerState {
   name: string;
   accountValue: number;
@@ -7,14 +6,23 @@ export interface PlayerState {
   level: number;
   trades: Trade[];
   currentTrade: Trade | null;
+  tradingTimeBarrier: number | null;
+  canTradeToday: boolean;
+  positionSize: number | null;
 }
 
 export interface MarketState {
   volatility: number;
   trend: 'bullish' | 'bearish' | 'neutral';
   currentDay: number;
+  currentHour: number;
   stockPrice: number;
   stockTicker: string;
+  availableStrikes: number[];
+  availableDeltas: {
+    calls: {[strike: number]: number},
+    puts: {[strike: number]: number}
+  };
 }
 
 export interface Trade {
@@ -26,8 +34,11 @@ export interface Trade {
   quantity: number;
   status: 'open' | 'closed' | 'expired';
   entryDay: number;
+  entryHour?: number;
   exitDay?: number;
+  exitHour?: number;
   profit?: number;
+  delta?: number;
 }
 
 export interface GameState {
@@ -65,16 +76,25 @@ export const initialGameState: GameState = {
     experience: 0,
     level: 1,
     trades: [],
-    currentTrade: null
+    currentTrade: null,
+    tradingTimeBarrier: null,
+    canTradeToday: true,
+    positionSize: null
   },
   market: {
-    volatility: 20,
+    volatility: 15,
     trend: 'neutral',
     currentDay: 1,
-    stockPrice: 100,
-    stockTicker: 'TECH'
+    currentHour: 0,
+    stockPrice: 450,
+    stockTicker: 'SPY',
+    availableStrikes: [430, 440, 450, 460, 470],
+    availableDeltas: {
+      calls: {430: 0.85, 440: 0.65, 450: 0.50, 460: 0.30, 470: 0.15},
+      puts: {430: 0.15, 440: 0.30, 450: 0.50, 460: 0.65, 470: 0.85}
+    }
   },
-  history: ['Welcome to Options Whisperer...'],
+  history: ['Welcome to Options Whisperer: SPY Trading Edition...'],
   gamePhase: 'intro',
   currentChoices: [],
   isTyping: false,

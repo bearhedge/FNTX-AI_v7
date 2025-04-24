@@ -6,7 +6,7 @@ import { Tooltip } from './Tooltip';
 import { PlayerInfo } from './PlayerInfo';
 import { NameInput } from './NameInput';
 import { useGameContext } from '@/context/GameContext';
-import { scenarios, performGameAction } from '@/data/gameData';
+import { scenarios, performGameAction, advanceGameFlow } from '@/data/gameData';
 import { Choice } from '@/types/game.types';
 import { useTypingEffect } from '@/hooks/useTypingEffect';
 
@@ -43,21 +43,37 @@ export function GameInterface() {
       setTypingMessage('');
     }
   }, [isComplete, typingMessage, dispatch]);
+  
+  // Handle game flow advancement
+  useEffect(() => {
+    if (isComplete && !state.isTyping && state.gamePhase === 'playing') {
+      const { nextScenario, message } = advanceGameFlow(state);
+      
+      if (message && nextScenario) {
+        setTimeout(() => {
+          addMessageWithTypingEffect(message);
+          
+          setTimeout(() => {
+            const scenario = scenarios.find(s => s.id === nextScenario);
+            if (scenario) {
+              dispatch({ type: 'SET_SCENARIO', payload: scenario });
+              dispatch({ type: 'SET_CHOICES', payload: scenario.choices });
+            }
+          }, 1500);
+        }, 500);
+      }
+    }
+  }, [isComplete, state, dispatch]);
 
   // Handle player name submission
   const handleNameSubmit = (name: string) => {
     dispatch({ type: 'SET_PLAYER_NAME', payload: name });
     
-    addMessageWithTypingEffect(`Welcome, ${name}! Let's begin your options trading journey.`);
+    addMessageWithTypingEffect(`Welcome, ${name}! Let's begin your SPY options trading journey.`);
     
-    const tutorialScenario = scenarios.find(s => s.id === 'tutorial');
-    if (tutorialScenario) {
-      setTimeout(() => {
-        dispatch({ type: 'SET_SCENARIO', payload: tutorialScenario });
-        dispatch({ type: 'SET_CHOICES', payload: tutorialScenario.choices });
-        dispatch({ type: 'SET_GAME_PHASE', payload: 'playing' });
-      }, 2000);
-    }
+    setTimeout(() => {
+      dispatch({ type: 'SET_GAME_PHASE', payload: 'playing' });
+    }, 1500);
   };
 
   // Handle choice selection
@@ -79,45 +95,24 @@ export function GameInterface() {
       dispatch({ type: 'UPDATE_MARKET', payload: newState.market });
     }
     
+    if (newState.currentScenario) {
+      dispatch({ type: 'SET_SCENARIO', payload: newState.currentScenario });
+    }
+    
+    if (newState.currentChoices) {
+      dispatch({ type: 'SET_CHOICES', payload: newState.currentChoices });
+    }
+    
     // Add the result message
     setTimeout(() => {
       addMessageWithTypingEffect(message);
       
       // Add trade if there's a current trade
       if (state.player.currentTrade) {
-        dispatch({ type: 'ADD_TRADE', payload: state.player.currentTrade });
+        setTimeout(() => {
+          dispatch({ type: 'ADD_TRADE', payload: state.player.currentTrade });
+        }, 1000);
       }
-      
-      // Handle subsequent scenario based on action
-      setTimeout(() => {
-        let nextScenario = null;
-        
-        switch(choice.action) {
-          case 'SELL_PUT':
-            nextScenario = scenarios.find(s => s.id === 'put_strike_selection');
-            break;
-            
-          case 'SELL_PUT_95':
-          case 'SELL_PUT_100':
-          case 'SELL_PUT_105':
-            // Advance time and update market
-            dispatch({ type: 'ADVANCE_DAY' });
-            dispatch({ type: 'ADVANCE_DAY' });
-            dispatch({ type: 'ADVANCE_DAY' });
-            
-            nextScenario = scenarios.find(s => s.id === 'market_movement');
-            break;
-            
-          case 'SKIP_TUTORIAL':
-            nextScenario = scenarios.find(s => s.id === 'first_trade');
-            break;
-        }
-        
-        if (nextScenario) {
-          dispatch({ type: 'SET_SCENARIO', payload: nextScenario });
-          dispatch({ type: 'SET_CHOICES', payload: nextScenario.choices });
-        }
-      }, 2000);
     }, 1500);
   };
 
@@ -129,12 +124,12 @@ export function GameInterface() {
       </h1>
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <div className="lg:col-span-2"> {/* Keep existing column span */}
+        <div className="lg:col-span-2">
           <Terminal 
             messages={state.history} 
             typing={state.isTyping}
             displayedText={displayedText}
-            className="h-[500px]" /* Increased height from 400px to 500px */
+            className="h-[500px]"
           />
           
           {state.gamePhase === 'setup' ? (
@@ -172,4 +167,3 @@ export function GameInterface() {
     </div>
   );
 }
-
